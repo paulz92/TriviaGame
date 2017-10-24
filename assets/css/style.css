@@ -32,7 +32,30 @@ h1 {
 	padding: 5px;
 }
 
-button {
+h2, h3 {
+	font-family: 'Russo One', sans-serif;
+}
+
+h3 {
+	font-size: 1.8em;
+	padding: 15px;
+}
+
+h2 {
+	font-size: 2.8em;
+	margin-top: 15px;
+	padding: 5px;
+}
+
+h2:hover {
+	background-color: purple;
+	border: 1px solid white;
+	color: white;
+	cursor: pointer;
+	border-radius: 25px;
+}
+
+#start-button {
 	font-family: 'Press Start 2P', cursive;
 	font-size: 3em;
 	background-color: #f2e39e;
@@ -45,9 +68,16 @@ button {
 	left: 30%;
 }
 
-button:hover {
+#start-button:hover {
 	background-color: purple;
 	border-color: white;
 	color: white;
 	cursor: pointer;
+}
+
+#question-or-result, #answers-stats, #timer {
+	margin: 0 auto;
+	width: 760px;
+	background-color: #f2e39e;
+	border-radius: 25px;
 }
