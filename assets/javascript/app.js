@@ -92,7 +92,7 @@ $("#start-button").on("click", function () {
 		// function to run timer
 		runTimer: function() {
 			// 10 secs to answer q
-			this.timeLeft = 10;
+			this.timeLeft = 2;
 			// writing initial time remaining to DOM
 			this.elements.writeTimer.html("<h3>Time Remaining: " + this.timeLeft + "</h3>");
 			// interval will be decremented every second from the decrement function
@@ -123,7 +123,7 @@ $("#start-button").on("click", function () {
 				// increase # unanswered by 1
 				triviaGame.totalUnanswered++;
 				// hold page for 5 seconds, then move to next round
-				setTimeout(triviaGame.nextRound, 5000);			
+				setTimeout(triviaGame.nextRound, 1000);					
 			};
 		},
 		// function that stops the timer once it hits 0
@@ -132,24 +132,30 @@ $("#start-button").on("click", function () {
 		},
 		// writes the question and answer from the current round to the DOM
 		nextRound: function() {
-			// increase round by 1
-			triviaGame.round++;
-			// clear results, media, correct answer
-			triviaGame.elements.writeResult.empty();
-			triviaGame.elements.writeMedia.empty();
-			triviaGame.elements.writeCorrectAnswer.empty();	
-			// start timer
-			triviaGame.runTimer();
-			// write q
-			triviaGame.elements.writeQuestion.html("<h3>" + 
-				triviaGame.questions[triviaGame.round - 1] + "</h3>");
-			// write a's, each receiving an h2 tag, an id which matches the value, and
-			// appending each to the div
-			for (var i = 0; i < triviaGame.answerChoices[triviaGame.round - 1].length; i++) {
-				triviaGame.elements.writeAnswers.append("<h2 id='" 
-					+ triviaGame.answerChoices[triviaGame.round - 1][i] + "'>" 
-					+ triviaGame.answerChoices[triviaGame.round - 1][i] + "</h2>");
-			};
+			// if there's still more questions, then...
+			if (triviaGame.round < triviaGame.questions.length) {
+				// increase round by 1
+				triviaGame.round++;
+				// clear results, media, correct answer
+				triviaGame.elements.writeResult.empty();
+				triviaGame.elements.writeMedia.empty();
+				triviaGame.elements.writeCorrectAnswer.empty();	
+				// start timer
+				triviaGame.runTimer();
+				// write q
+				triviaGame.elements.writeQuestion.html("<h3>" + 
+					triviaGame.questions[triviaGame.round - 1] + "</h3>");
+				// write a's, each receiving an h2 tag, an id which matches the value, and
+				// appending each to the div
+				for (var i = 0; i < triviaGame.answerChoices[triviaGame.round - 1].length; i++) {
+					triviaGame.elements.writeAnswers.append("<h2 id='" 
+						+ triviaGame.answerChoices[triviaGame.round - 1][i] + "'>" 
+						+ triviaGame.answerChoices[triviaGame.round - 1][i] + "</h2>");
+				};
+			  // if all questions have been displayed, show the stats		
+			} else {
+				triviaGame.showStats();
+			}		
 		},
 		// correctly guessed function
 		correctGuess: function() {
@@ -195,12 +201,29 @@ $("#start-button").on("click", function () {
 			// appending the gif to the image div
 			triviaGame.elements.writeMedia.append(triviaGame.elements.funnyGif);
 		},
-		gameOver: function() {
-
+		showStats: function() {
+			// clear media, correct answer		
+			triviaGame.elements.writeMedia.empty();
+			triviaGame.elements.writeCorrectAnswer.empty();
+			// overwrite result with All done, here's how you did:
+			triviaGame.elements.writeResult.html("<h3>All done, here's how you did:</h3>");
+			// write stats
+			triviaGame.elements.writeStats.append("<h4>Total Correct: " 
+				+ triviaGame.totalCorrect + "</h4>");
+			triviaGame.elements.writeStats.append("<h4>Total Incorrect: " 
+				+ triviaGame.totalIncorrect + "</h4>");
+			triviaGame.elements.writeStats.append("<h4>Total Unanswered: " 
+				+ triviaGame.totalUnanswered + "</h4>");
+			// create text asking user if they want to play again
+			triviaGame.elements.writeStartOver.html("<h2 id='start-over'>Start Over?</h2>")
 		},
-		resetGame: function() {
-
-		},
+		restartGame: function() {
+			triviaGame.round = 0;
+			triviaGame.totalCorrect = 0;
+			triviaGame.totalIncorrect = 0;
+			triviaGame.totalUnanswered = 0;
+			triviaGame.nextRound();
+		}
 	};
 
 	// clears start button once clicked
@@ -230,6 +253,11 @@ $("#start-button").on("click", function () {
 			triviaGame.incorrectGuess();
 		}
 		// alert("you clicked something");
+	});
+
+	// also Bug, doesn't do anything
+	$("#start-over").on("click", function() {
+		triviaGame.restartGame();
 	});
 
 	// testing/debugging
