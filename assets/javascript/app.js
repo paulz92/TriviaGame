@@ -24,6 +24,7 @@
 //    reload - we just reset the game back to beginning
 // ===============================================================
 
+// wait for doc to load
 $("#start-button").on("click", function () {
 
 	var triviaGame = {
@@ -65,15 +66,15 @@ $("#start-button").on("click", function () {
 			"assets/images/federer.gif", "assets/images/brazil.gif", "assets/images/sanders.gif",
 			"assets/images/brodeur.gif", "assets/images/olajuwon.gif",
 		],
-		// needed for cycling through arrays correctly
+		// empty round counter
 		round: "",
 		// next 3 are stats
 		totalCorrect: 0,
 		totalIncorrect: 0,
 		totalUnanswered: 0,
-		// starting timer for how many seconds left to guess
+		// initializing timer
 		timeLeft: "",
-		// equating this to 0 for now
+		// initializing interval id
 		intervalId: "",
 		// shorthand creating properties for jquery
 		elements: {
@@ -90,25 +91,38 @@ $("#start-button").on("click", function () {
 		},
 		// function to run timer
 		runTimer: function() {
+			// 10 secs to answer q
 			this.timeLeft = 10;
+			// writing initial time remaining to DOM
 			this.elements.writeTimer.html("<h3>Time Remaining: " + this.timeLeft + "</h3>");
+			// interval will be decremented every second from the decrement function
 			this.intervalId = setInterval(this.decrement, 1000);
 		},
 		// funtion to decrement timer/write new time to DOM every second
 		// if statement includes logic as to what happens if timer runs to 0
 		decrement: function() {
+			// decrease time left by 1
 			triviaGame.timeLeft--;
+			// every time decreased, write new timeleft to DOM
 			triviaGame.elements.writeTimer.html("<h3>Time Remaining: " + triviaGame.timeLeft +
 				"</h3>");
+			// if user runs out of time
 			if (triviaGame.timeLeft === 0) {
+				// stop timer
 				triviaGame.stopTimer();
+				// clear the q and as divs
 				triviaGame.elements.writeAnswers.empty();
 				triviaGame.elements.writeQuestion.empty();
+				// write time's up
 				triviaGame.elements.writeResult.html("<h3>Time's Up!</h3>");
+				// write correct answer
 				triviaGame.elements.writeCorrectAnswer.html("<h4>The correct answer was: " 
 					+ triviaGame.correctAnswers[triviaGame.round - 1]) + "</h4>";
+				// display the associated image
 				triviaGame.displayImage();
+				// increase # unanswered by 1
 				triviaGame.totalUnanswered++;
+				// hold page for 5 seconds, then move to next round
 				setTimeout(triviaGame.nextRound, 5000);			
 			};
 		},
@@ -118,42 +132,67 @@ $("#start-button").on("click", function () {
 		},
 		// writes the question and answer from the current round to the DOM
 		nextRound: function() {
+			// increase round by 1
 			triviaGame.round++;
+			// clear results, media, correct answer
 			triviaGame.elements.writeResult.empty();
 			triviaGame.elements.writeMedia.empty();
 			triviaGame.elements.writeCorrectAnswer.empty();	
+			// start timer
 			triviaGame.runTimer();
+			// write q
 			triviaGame.elements.writeQuestion.html("<h3>" + 
 				triviaGame.questions[triviaGame.round - 1] + "</h3>");
+			// write a's, each receiving an h2 tag, an id which matches the value, and
+			// appending each to the div
 			for (var i = 0; i < triviaGame.answerChoices[triviaGame.round - 1].length; i++) {
 				triviaGame.elements.writeAnswers.append("<h2 id='" 
 					+ triviaGame.answerChoices[triviaGame.round - 1][i] + "'>" 
 					+ triviaGame.answerChoices[triviaGame.round - 1][i] + "</h2>");
 			};
 		},
+		// correctly guessed function
 		correctGuess: function() {
+			// timer stops
 			triviaGame.stopTimer();
+			// empty q and a's
 			triviaGame.elements.writeAnswers.empty();
 			triviaGame.elements.writeQuestion.empty();
+			// tell user they're correct
 			triviaGame.elements.writeResult.html("<h3>Correct!</h3>");
+			// display associated image
 			triviaGame.displayImage();	
+			// increase total correct by 1
 			triviaGame.totalCorrect++;
+			// hold page for 5 seconds, start next round
 			setTimeout(triviaGame.nextRound, 5000);
 		},
+		//incorrect guessed function
 		incorrectGuess: function() {
+			// timer stops
 			triviaGame.stopTimer();
+			// empty q and a's
 			triviaGame.elements.writeAnswers.empty();
 			triviaGame.elements.writeQuestion.empty();
+			// tell user they're wrong
 			triviaGame.elements.writeResult.html("<h3>Nope!</h3>");
+			// show user correct answer
 			triviaGame.elements.writeCorrectAnswer.html("<h4>The correct answer was: " 
 				+ triviaGame.correctAnswers[triviaGame.round - 1]) + "</h4>";
+			// display associated image
 			triviaGame.displayImage();	
+			// increase total incorrect by 1
 			triviaGame.totalIncorrect++;
+			// hold page for 5 seconds, start next round
 			setTimeout(triviaGame.nextRound, 5000);
 		},
+		// function to diplay image
 		displayImage: function() {
+			// adding class .gif to the gif so that it can be sized by css
 			triviaGame.elements.funnyGif.addClass("gif");
+			// adding the src tag with relative file path to img tag
 			triviaGame.elements.funnyGif.attr("src", triviaGame.media[triviaGame.round - 1]);
+			// appending the gif to the image div
 			triviaGame.elements.writeMedia.append(triviaGame.elements.funnyGif);
 		},
 		gameOver: function() {
@@ -171,15 +210,26 @@ $("#start-button").on("click", function () {
 	// displays the first q/a once start button clicked
 	triviaGame.nextRound();
 
-
+	// when the h2 is clicked (only h2's in game are answer choices)
+////// BUG HERE!!!!!////================================================
+	// the on click only registers for the first question. all subsequent questions do
+	// not register any clicks occurring.
+	// However, I know the logic works because if you just let the timer run to 0 each time,
+	// the game progresses as it should with the questions cycling through and 
+	// unanswered var increasing each time. since timer hitting 0 is not associated with any
+	// on click, this is how I narrowed down the bug to here. confirmed with the commented out
+	// alert as well
 	$("h2").on("click", function() {
+		// check to see if the h2 id matches the correct answer for the round 
 		if (($(this).attr("id")) === triviaGame.correctAnswers[triviaGame.round - 1]) {
+			// if so, run correct guess function
 			triviaGame.correctGuess();
+	      // if not...
 		} else if (($(this).attr("id")) !== triviaGame.correctAnswers[triviaGame.round - 1]) {
+			// run incorrect guess function
 			triviaGame.incorrectGuess();
 		}
 		// alert("you clicked something");
-		
 	});
 
 	// testing/debugging
