@@ -32,8 +32,13 @@ h1 {
 	padding: 5px;
 }
 
-h2, h3 {
+h2, h3, h4 {
 	font-family: 'Russo One', sans-serif;
+}
+
+h4 {
+	font-size: 1.2em;
+	padding: 5px;
 }
 
 h3 {
@@ -75,9 +80,18 @@ h2:hover {
 	cursor: pointer;
 }
 
-#question-or-result, #answers-stats, #timer {
+#question, #result, #answer-choices, #stats, #correct-answer, #timer {
 	margin: 0 auto;
 	width: 760px;
 	background-color: #f2e39e;
 	border-radius: 25px;
+}
+
+#images {
+	margin-top: 16px;
+}
+
+.gif {
+	width: 560px;
+	height: 310px;
 }
