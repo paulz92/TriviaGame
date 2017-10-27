@@ -72,7 +72,7 @@ $(document).ready(function() {
 					triviaGame.unanswered();			
 				};
 			},
-			// method stops the timer once it hits 0
+			// method stops the timer
 			stopTimer: function() {
 				clearInterval(triviaGame.intervalId);
 			},
@@ -94,10 +94,10 @@ $(document).ready(function() {
 				if (triviaGame.round < triviaGame.questions.length) {
 					// increase round by 1
 					triviaGame.round++;
-					// clear results, media, correct answer, start timer, write q
+					// run timer, clear results, media, correct answer, write q
+					triviaGame.runTimer();
 					triviaGame.emptyMediaAndAnswer();
 					$("#result").empty();
-					triviaGame.runTimer();
 					$("#question").html("<h3>" + 
 						triviaGame.questions[triviaGame.round - 1] + "</h3>");
 					// write a's to their respective id as defined in the html
@@ -176,7 +176,7 @@ $(document).ready(function() {
 				// create text asking user if they want to play again
 				$("#restart-button").html("<h2>Start Over?</h2>")
 			},
-			// restart game method triggers when start over button is clicked
+			// restart game method triggers when start over div is clicked
 			restartGame: function() {
 				// resets all properties to 0
 				triviaGame.round = 0;

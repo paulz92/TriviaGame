@@ -1,9 +1,11 @@
+/*full height of browser, set background and overflow*/
 body {
 	height: 100%;
 	background-image: url(../images/background.jpg);
 	overflow: auto;
 }
-
+/*leave space on top/bottom of browser, overflow, centered
+ position relative*/
 #container {
 	height: 87vh;
 	width: 1000px;
@@ -14,12 +16,14 @@ body {
 	border-radius: 50px;
 	text-align: center;
 	position: relative;
+	overflow: auto;
 }
-
+ /*centered within container*/
 #content {
 	margin: 0 auto;
 }
 
+/*fonts/shadows/centered/padding*/
 h1 {
 	font-family: 'Stalinist One', cursive;
 	font-size: 4em;
@@ -52,6 +56,7 @@ h2 {
 	padding: 5px;
 }
 
+/*hover effect for answer choices and start over*/
 h2:hover {
 	background-color: purple;
 	border: 1px solid white;
@@ -60,6 +65,7 @@ h2:hover {
 	border-radius: 25px;
 }
 
+/*positioned absolute to container, fonts, width/height*/
 #start-button {
 	font-family: 'Press Start 2P', cursive;
 	font-size: 3em;
@@ -73,6 +79,7 @@ h2:hover {
 	left: 30%;
 }
 
+/*hover effect for start button*/
 #start-button:hover {
 	background-color: purple;
 	border-color: white;
@@ -80,6 +87,7 @@ h2:hover {
 	cursor: pointer;
 }
 
+/*width and style of divs*/
 #question, #result, #answer-choices, #stats, #correct-answer, #timer, #restart-button {
 	margin: 0 auto;
 	width: 760px;
@@ -87,11 +95,74 @@ h2:hover {
 	border-radius: 25px;
 }
 
+/*spacing*/
 #images {
 	margin-top: 16px;
 }
 
+/*gif size*/
 .gif {
 	width: 560px;
 	height: 310px;
+}
+
+/*media queries*/
+@media screen and (max-width: 1020px) {
+	#container {
+		width: 750px;
+	}
+
+	#question, #result, #answer-choices, #stats, #correct-answer, #timer, #restart-button {
+	margin: 0 auto;
+	width: 600px;
+	background-color: white;
+	border-radius: 25px;
+	}
+
+	.gif {
+		width: 450px;
+		height: 248px;
+	}
+	
+	h1 {
+		font-size: 3.0em;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	#container {
+		width: 600px;
+	}
+
+	#question, #result, #answer-choices, #stats, #correct-answer, #timer, #restart-button {
+	margin: 0 auto;
+	width: 450px;
+	background-color: white;
+	border-radius: 25px;
+	}
+
+	.gif {
+		width: 400px;
+		height: 221px;
+	}
+
+	#start-button {
+		font-size: 2.7em;
+	}
+
+	h1 {
+		font-size: 2.3em;
+	}
+
+	h2 {
+		font-size: 2.4em;
+	}
+
+	h3 {
+		font-size: 1.3em;
+	}
+
+	h4 {
+		font-size: 1.0em;
+	}	
 }
